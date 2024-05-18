@@ -75,11 +75,12 @@ pipeline {
         stage('Release to Production') {
             steps {
                 script {
-                        octopusDeployRelease additionalArgs: '--deployTo=Production',
+                    // Promote the application to the production environment
+                    octopusDeployRelease additionalArgs: '--deployTo=Production',
                         releaseVersion: '1.0.0',
                         spaceId: 'Spaces-1',
                         project: 'SIT753_Task_6.2'
-                )
+                }
             }
         }
 
@@ -101,6 +102,3 @@ pipeline {
         }
     }
 }
-
-
-//updated code
