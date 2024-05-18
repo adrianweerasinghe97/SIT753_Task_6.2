@@ -80,7 +80,7 @@ pipeline {
                         releaseVersion: '1.0.0',
                         spaceId: 'Spaces-1',
                         project: 'SIT753_Task_6.2'
-                )
+                }
             }
         }
 
@@ -88,9 +88,7 @@ pipeline {
             steps {
                 script {
                     // Configure Datadog monitoring and alerting
-                    datadog(apiKey: env.DATADOG_API_KEY, appKey: env.DATADOG_APP_KEY) {
-                        sh 'datadog-agent status'
-                    }
+                    sh 'datadog-agent status'
                 }
             }
         }
