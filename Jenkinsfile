@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    triggers {
+        pollSCM('H/2 * * * *')
+    }
+
     environment {
         DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
         SONARQUBE_SERVER = 'sonarqube-server'
