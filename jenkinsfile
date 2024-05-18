@@ -46,8 +46,8 @@ pipeline {
             steps {
                 script {
                     // Run npm tests
-                    sh 'npm install'
-                    sh 'npm test'
+                    bat 'npm install'
+                    bat 'npm test'
                 }
                 junit '**/test-results.xml'
             }
@@ -57,7 +57,7 @@ pipeline {
             steps {
                 script {
                     withSonarQubeEnv('SonarQube') {
-                        sh 'sonar-scanner'
+                        bat 'sonar-scanner'
                     }
                 }
             }
@@ -67,7 +67,7 @@ pipeline {
             steps {
                 script {
                     // Deploy the Docker container to the test environment using Docker Compose
-                    sh 'docker-compose -f docker-compose.test.yml up -d'
+                    bat 'docker-compose -f docker-compose.test.yml up -d'
                 }
             }
         }
@@ -88,7 +88,7 @@ pipeline {
             steps {
                 script {
                     // Configure Datadog monitoring and alerting
-                    sh 'datadog-agent status'
+                    bat 'datadog-agent status'
                 }
             }
         }
