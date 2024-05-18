@@ -1,15 +1,16 @@
 {
-  "name": "sit725_group_project",
+  "name": "sit753",
   "version": "1.0.0",
-  "description": "This is a group project for SIT725-T2-2022",
+  "description": "This is a code for sit753 task 6.2HD",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "start:dev": "nodemon server.js"
+    "start:dev": "nodemon server.js",
+    "build": "echo 'No build step necessary'"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/adrianweerasinghe97/sit725_group_project.git"
+    "url": "git+https://github.com/adrianweerasinghe97/SIT753_Task_6.2.git"
   },
   "keywords": [
     "Node"
@@ -19,7 +20,7 @@
   "bugs": {
     "url": "https://github.com/adrianweerasinghe97/sit725_group_project/issues"
   },
-  "homepage": "https://github.com/adrianweerasinghe97/sit725_group_project#readme",
+  "homepage": "https://github.com/adrianweerasinghe97/SIT753_Task_6.2.git#readme",
   "dependencies": {
     "connect-mongodb-session": "^3.1.1",
     "cors": "^2.8.5",

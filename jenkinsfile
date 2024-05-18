@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
+        DOCKER_CREDENTIALS_ID = 'docker-credentials' // Docker credentials ID
         SONARQUBE_SERVER = 'sonarqube-server'
         DATADOG_API_KEY = 'datadog-api-key'
     }
@@ -17,7 +17,7 @@ pipeline {
                 git(
                     url: 'https://github.com/adrianweerasinghe97/SIT753_Task_6.2.git',
                     branch: 'main',
-                    credentialsId: 'dd8d9b6f-59c4-44fd-b55d-e5a7dd5eea62' // Your Git credentials ID
+                    credentialsId: 'dd8d9b6f-59c4-44fd-b55d-e5a7dd5eea62' // Git credentials ID
                 )
             }
         }
@@ -34,7 +34,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    // Push the Docker image to the registry
+                    // Pushing the Docker image to the registry
                     docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
                         docker.image('myapp:latest').push('latest')
                     }
@@ -75,13 +75,11 @@ pipeline {
         stage('Release to Production') {
             steps {
                 script {
-                    // Promote the application to the production environment
-                    // Assuming you have a specific release strategy, e.g., with Octopus Deploy
-                    octopusDeployRelease additionalArgs: '--deployTo=Production',
+                        octopusDeployRelease additionalArgs: '--deployTo=Production',
                         releaseVersion: '1.0.0',
                         spaceId: 'Spaces-1',
                         project: 'SIT753_Task_6.2'
-                }
+                )
             }
         }
 
@@ -105,4 +103,4 @@ pipeline {
 }
 
 
-//code updated
+//updated code
