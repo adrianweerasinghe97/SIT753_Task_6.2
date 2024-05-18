@@ -14,7 +14,11 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/adrianweerasinghe97/SIT753_Task_6.2.git', branch: 'master'
+                git(
+                    url: 'https://github.com/adrianweerasinghe97/SIT753_Task_6.2.git',
+                    branch: 'master',
+                    credentialsId: 'dd8d9b6f-59c4-44fd-b55d-e5a7dd5eea62' // Your Git credentials ID
+                )
             }
         }
 
