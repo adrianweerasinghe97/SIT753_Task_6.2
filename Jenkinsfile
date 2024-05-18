@@ -12,15 +12,25 @@ pipeline {
     }
 
     stages {
-        stage('Build') {
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/adrianweerasinghe97/SIT753_Task_6.2.git', branch: 'master'
+            }
+        }
+
+        stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build('myapp:latest').inside {
-                        sh 'npm install'
-                        sh 'npm run build'
-                    }
+                    // Build the Docker image and tag it as 'myapp:latest'
+                    docker.build('myapp:latest')
                 }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
                 script {
+                    // Push the Docker image to the registry
                     docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
                         docker.image('myapp:latest').push('latest')
                     }
@@ -28,10 +38,12 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('Run Tests') {
             steps {
                 script {
-                    sh 'npm run test'
+                    // Run npm tests
+                    sh 'npm install'
+                    sh 'npm test'
                 }
                 junit '**/test-results.xml'
             }
@@ -47,17 +59,20 @@ pipeline {
             }
         }
 
-        stage('Deploy to Test') {
+        stage('Deploy to Test Environment') {
             steps {
                 script {
-                    docker.compose.up()
+                    // Deploy the Docker container to the test environment using Docker Compose
+                    sh 'docker-compose -f docker-compose.test.yml up -d'
                 }
             }
         }
 
-        stage('Release') {
+        stage('Release to Production') {
             steps {
                 script {
+                    // Promote the application to the production environment
+                    // Assuming you have a specific release strategy, e.g., with Octopus Deploy
                     octopusDeployRelease additionalArgs: '--deployTo=Production',
                         releaseVersion: '1.0.0',
                         spaceId: 'Spaces-1',
@@ -69,8 +84,8 @@ pipeline {
         stage('Monitoring and Alerting') {
             steps {
                 script {
-                    datadog(apiKey: env.DATADOG_API_KEY,
-                            appKey: env.DATADOG_APP_KEY) {
+                    // Configure Datadog monitoring and alerting
+                    datadog(apiKey: env.DATADOG_API_KEY, appKey: env.DATADOG_APP_KEY) {
                         sh 'datadog-agent status'
                     }
                 }
