@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "This is a code for sit753 task 6.2HD",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "start": "node server.js",
     "start:dev": "nodemon server.js",
