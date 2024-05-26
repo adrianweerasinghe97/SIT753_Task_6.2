@@ -97,7 +97,7 @@ pipeline {
 
     post {
         always {
-            node {
+            node('master') { // Specify the node label, replace 'master' with the appropriate label if necessary
                 cleanWs()
             }
         }
