@@ -46,8 +46,8 @@ pipeline {
             }
             steps {
                 script {
-                    // Run ESLint for code quality analysis
-                    bat 'npx eslint .'
+                    // Run ESLint for code quality analysis and fix fixable issues
+                    bat 'npx eslint . --fix'
                 }
             }
         }
