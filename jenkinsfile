@@ -1,0 +1,90 @@
+pipeline {
+    agent any
+
+    triggers {
+        pollSCM('H/2 * * * *')
+    }
+
+    environment {
+        DOCKER_CREDENTIALS_ID = 'docker-credentials' // Docker credentials ID
+        DOCKER_IMAGE = 'adriandock1830/sit753_task_6.2'
+        GIT_REPO = 'https://github.com/adrianweerasinghe97/SIT753_Task_6.2.git'
+        GIT_CREDENTIALS_ID = 'dd8d9b6f-59c4-44fd-b55d-e5a7dd5eea62' // Git credentials ID
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git(
+                    url: "${env.GIT_REPO}",
+                    branch: 'main',
+                    credentialsId: "${env.GIT_CREDENTIALS_ID}"
+                )
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Build the Docker image and tag it
+                    docker.build("${DOCKER_IMAGE}:latest") // Use your Docker Hub username and repository
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    // Push the Docker image to the registry
+                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
+                        docker.image("${DOCKER_IMAGE}:latest").push('latest') // Use your Docker Hub username and repository
+                    }
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                script {
+                    // Run Maven tests
+                    bat 'mvn clean test'
+                }
+                junit '**/target/surefire-reports/*.xml'
+            }
+        }
+
+        stage('Code Quality Analysis') {
+            steps {
+                script {
+                    // Run ESLint for code quality analysis
+                    bat 'npm install'
+                    bat 'npx eslint .'
+                }
+            }
+        }
+
+        stage('Deploy to Test Environment') {
+            steps {
+                script {
+                    // Deploy the Docker container to the test environment using Docker Compose
+                    bat 'docker-compose -f docker-compose.test.yml up -d'
+                }
+            }
+        }
+
+        stage('Release to Production') {
+            steps {
+                script {
+                    // Placeholder for release to production steps
+                    echo 'Release to production environment'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
