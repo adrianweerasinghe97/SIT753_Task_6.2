@@ -58,7 +58,11 @@ pipeline {
                     // Run Maven tests
                     bat 'mvn clean test'
                 }
-                junit '**/target/surefire-reports/*.xml'
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
             }
         }
 
