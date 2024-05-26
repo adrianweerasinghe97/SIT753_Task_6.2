@@ -10,10 +10,10 @@ pipeline {
         DOCKER_IMAGE = 'adriandock1830/sit753_task_6.2'
         GIT_REPO = 'https://github.com/adrianweerasinghe97/SIT753_Task_6.2.git'
         GIT_CREDENTIALS_ID = 'dd8d9b6f-59c4-44fd-b55d-e5a7dd5eea62' // Git credentials ID
+        NODEJS_HOME = 'E:\\Softwares\\Nodejs' // Path to the local Node.js installation
     }
 
     tools {
-        nodejs '22.2.0' // Name of the NodeJS installation configured in Jenkins
         maven '3.9.6' // Name of the Maven installation configured in Jenkins
     }
 
@@ -29,6 +29,9 @@ pipeline {
         }
 
         stage('Install Dependencies') {
+            environment {
+                PATH = "${env.NODEJS_HOME};${env.PATH}" // Add Node.js to the PATH
+            }
             steps {
                 script {
                     // Install npm dependencies
@@ -38,6 +41,9 @@ pipeline {
         }
 
         stage('Run ESLint') {
+            environment {
+                PATH = "${env.NODEJS_HOME};${env.PATH}" // Add Node.js to the PATH
+            }
             steps {
                 script {
                     // Run ESLint for code quality analysis
