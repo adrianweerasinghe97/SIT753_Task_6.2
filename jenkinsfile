@@ -31,8 +31,8 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    // Install npm dependencies using Maven
-                    bat 'mvn frontend:install-node-and-npm frontend:npm@npm install'
+                    // Install npm dependencies
+                    bat 'npm install'
                 }
             }
         }
