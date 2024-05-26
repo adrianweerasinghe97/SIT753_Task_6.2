@@ -13,8 +13,8 @@ pipeline {
     }
 
     tools {
-        nodejs 'NodeJS 14' // Name of the NodeJS installation configured in Jenkins
-        maven 'Maven 3.6.3' // Name of the Maven installation configured in Jenkins
+        nodejs '22.2.0' // Name of the NodeJS installation configured in Jenkins
+        maven '3.9.6' // Name of the Maven installation configured in Jenkins
     }
 
     stages {
@@ -31,8 +31,8 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    // Install npm dependencies
-                    bat 'npm install'
+                    // Install npm dependencies using Maven
+                    bat 'mvn frontend:install-node-and-npm frontend:npm@npm install'
                 }
             }
         }
