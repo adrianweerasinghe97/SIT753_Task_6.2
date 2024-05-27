@@ -20,7 +20,7 @@ pipeline {
               - "3000:3000"
             environment:
               - NODE_ENV=test
-        ''' // Content of docker-compose.test.yml
+        '''.stripIndent() // Content of docker-compose.test.yml
     }
 
     stages {
@@ -91,9 +91,12 @@ pipeline {
         stage('Deploy to Test Environment') {
             steps {
                 script {
+                    // Write the Docker Compose content to a temporary file
+                    writeFile file: 'docker-compose.test.yml', text: env.DOCKER_COMPOSE_TEST_YML
+
                     // Deploy the Docker container to the test environment using Docker Compose
-                    def composeFile = bat(script: "echo ${DOCKER_COMPOSE_TEST_YML} | docker-compose -f - up -d", returnStdout: true)
-                    currentBuild.description += "\n\nDocker Compose Deployment Output:\n${composeFile}"
+                    def composeOutput = bat(script: 'docker-compose -f docker-compose.test.yml up -d', returnStdout: true)
+                    currentBuild.description += "\n\nDocker Compose Deployment Output:\n${composeOutput}"
                 }
             }
         }
