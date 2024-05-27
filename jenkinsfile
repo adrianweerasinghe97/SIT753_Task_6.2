@@ -11,6 +11,16 @@ pipeline {
         GIT_REPO = 'https://github.com/adrianweerasinghe97/SIT753_Task_6.2.git'
         GIT_CREDENTIALS_ID = 'dd8d9b6f-59c4-44fd-b55d-e5a7dd5eea62' // Git credentials ID
         NODEJS_HOME = 'E:\\Softwares\\Nodejs' // Path to the local Node.js installation
+        DOCKER_COMPOSE_TEST_YML = '''
+        version: '3'
+        services:
+          web:
+            image: adriandock1830/sit753_task_6.2:latest
+            ports:
+              - "3000:3000"
+            environment:
+              - NODE_ENV=test
+        ''' // Content of docker-compose.test.yml
     }
 
     stages {
@@ -52,7 +62,7 @@ pipeline {
             steps {
                 script {
                     // Run Jest tests and capture the output
-                    def testOutput = bat(script: 'npx jest --ci', returnStdout: true)
+                    def testOutput = bat(script: 'npx jest --ci --reporters=jest-junit', returnStdout: true)
                     currentBuild.description = testOutput
                 }
             }
@@ -82,7 +92,8 @@ pipeline {
             steps {
                 script {
                     // Deploy the Docker container to the test environment using Docker Compose
-                    bat 'docker-compose -f docker-compose.test.yml up -d'
+                    def composeFile = bat(script: "echo ${DOCKER_COMPOSE_TEST_YML} | docker-compose -f - up -d", returnStdout: true)
+                    currentBuild.description += "\n\nDocker Compose Deployment Output:\n${composeFile}"
                 }
             }
         }
@@ -106,7 +117,15 @@ pipeline {
                 emailext (
                     to: 'adrian1997.thilina@gmail.com',
                     subject: "Jenkins Build Success - ${currentBuild.fullDisplayName}",
-                    body: "Build succeeded. Please find the test report below:\n\n${currentBuild.description}",
+                    body: """
+                        Build succeeded. 
+
+                        Please find the test report below:
+                        ${currentBuild.description}
+
+                        Docker Compose Test YML:
+                        ${env.DOCKER_COMPOSE_TEST_YML}
+                    """,
                     attachLog: true
                 )
             }
@@ -116,7 +135,15 @@ pipeline {
                 emailext (
                     to: 'adrian1997.thilina@gmail.com',
                     subject: "Jenkins Build Failed - ${currentBuild.fullDisplayName}",
-                    body: "Build failed. Please find the test report below:\n\n${currentBuild.description}",
+                    body: """
+                        Build failed. 
+
+                        Please find the test report below:
+                        ${currentBuild.description}
+
+                        Docker Compose Test YML:
+                        ${env.DOCKER_COMPOSE_TEST_YML}
+                    """,
                     attachLog: true
                 )
             }
