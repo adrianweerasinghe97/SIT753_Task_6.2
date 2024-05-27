@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node server.js",
     "start:dev": "nodemon server.js",
-    "build": "echo 'No build step necessary'"
+    "build": "echo 'No build step necessary'",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -33,6 +34,20 @@
   },
   "devDependencies": {
     "eslint": "^9.3.0",
+    "jest": "^29.4.1",
+    "jest-junit": "^16.0.0",
     "nodemon": "^2.0.19"
+  },
+  "jest": {
+    "reporters": [
+      "default",
+      [
+        "jest-junit",
+        {
+          "outputDirectory": ".",
+          "outputName": "jest-junit.xml"
+        }
+      ]
+    ]
   }
 }

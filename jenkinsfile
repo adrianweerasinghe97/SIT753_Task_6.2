@@ -13,10 +13,6 @@ pipeline {
         NODEJS_HOME = 'E:\\Softwares\\Nodejs' // Path to the local Node.js installation
     }
 
-    tools {
-        maven '3.9.6' // Name of the Maven installation configured in Jenkins
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -52,16 +48,16 @@ pipeline {
             }
         }
 
-        stage('Run Maven Tests') {
+        stage('Run Jest Tests') {
             steps {
                 script {
-                    // Run Maven tests
-                    bat 'mvn clean test'
+                    // Run Jest tests
+                    bat 'npx jest --ci --reporters=jest-junit'
                 }
             }
             post {
                 always {
-                    junit 'target/surefire-reports/*.xml'
+                    junit 'jest-junit.xml'
                 }
             }
         }
@@ -111,4 +107,3 @@ pipeline {
         }
     }
 }
-//update
