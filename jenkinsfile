@@ -51,13 +51,9 @@ pipeline {
         stage('Run Jest Tests') {
             steps {
                 script {
-                    // Run Jest tests
-                    bat 'npx jest --ci --reporters=jest-junit'
-                }
-            }
-            post {
-                always {
-                    junit 'reports/jest-junit.xml'
+                    // Run Jest tests and capture the output
+                    def testOutput = bat(script: 'npx jest --ci', returnStdout: true)
+                    currentBuild.description = testOutput
                 }
             }
         }
@@ -110,9 +106,8 @@ pipeline {
                 emailext (
                     to: 'adrian1997.thilina@gmail.com',
                     subject: "Jenkins Build Success - ${currentBuild.fullDisplayName}",
-                    body: "Build succeeded. Please find the attached test report.",
-                    attachLog: true,
-                    attachmentsPattern: 'reports/jest-junit.xml'
+                    body: "Build succeeded. Please find the test report below:\n\n${currentBuild.description}",
+                    attachLog: true
                 )
             }
         }
@@ -121,9 +116,8 @@ pipeline {
                 emailext (
                     to: 'adrian1997.thilina@gmail.com',
                     subject: "Jenkins Build Failed - ${currentBuild.fullDisplayName}",
-                    body: "Build failed. Please find the attached test report.",
-                    attachLog: true,
-                    attachmentsPattern: 'reports/jest-junit.xml'
+                    body: "Build failed. Please find the test report below:\n\n${currentBuild.description}",
+                    attachLog: true
                 )
             }
         }
