@@ -7,7 +7,7 @@ pipeline {
 
     environment {
         DOCKER_CREDENTIALS_ID = 'docker-credentials' // Docker credentials ID
-        DOCKER_IMAGE = 'adriandock1830/sit753_task_6.2HD'
+        DOCKER_IMAGE = 'adriandock1830/sit753_task_6.2hd'
         GIT_REPO = 'https://github.com/adrianweerasinghe97/SIT753_Task_6.2.git'
         GIT_CREDENTIALS_ID = 'dd8d9b6f-59c4-44fd-b55d-e5a7dd5eea62' // Git credentials ID
         NODEJS_HOME = 'E:\\Softwares\\Nodejs' // Path to the local Node.js installation
